@@ -1,3 +1,27 @@
+//Map Setup
+let startLayer = L.tileLayer.provider("Esri.WorldStreetMap");
+
+let map = L.map("map", {
+    center: [41.7625, -72.674167], //Hartford
+    zoom: 8,
+    layers: [
+        startLayer
+    ]
+});
+
+let overlay = {
+    drugaccidents: L.featureGroup() 
+};
+
+L.control.layers({
+    "Esri.WorldStreetMap": L.tileLayer.provider("Esri.WorldStreetMap"),
+    "Esri.WorldPhysical": L.tileLayer.provider("Esri.WorldPhysical"),
+    "OpenTopoMap": L.tileLayer.provider("OpenTopoMap")
+}, {
+    "Drug Accidents": overlay.drugaccidents
+}).addTo(map);
+
+//Data
 console.log("Datensatz", DATA);
 console.log("Daten", DATA["data"])
 
