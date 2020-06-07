@@ -61,13 +61,15 @@ let drawAccidents = function () {
             `<b>Date:</b> ${element[9]}</br>`+
             `<b>Personal Details:</b> ${element[12]}, ${element[11]}</br>`+
             // `<b>Location of Death:</b> ${element[19]} (${element[17]}, ${element[18]})`+
-            (typeof element[19] == "Other" ? `<b>Location of Death:</b> ${element[20]} (${element[17]}, ${element[18]})` : `<b>Location of Death:</b> ${element[19]} (${element[17]}, ${element[18]})`)+
+            (typeof element[19] === "Other" ? `<b>Location of Death:</b> ${element[20]} (${element[17]}, ${element[18]})` : `<b>Location of Death:</b> ${element[19]} (${element[17]}, ${element[18]})`)+
             `</br><b>Cause of Death:</b> ${element[26]}</br>`+
-            `<b>Medical Preconditions:</b> ${element[27]}</br>`
-            // `<b>Detected Substances:</b> ${element[]}</br>`
+            `<b>Medical Preconditions:</b> ${element[27] || "-"}</br>`+
+            `<b>Detected Substances:</b></br>`
+            // (typeof element[28] == "Y" ? `<li>${DATA.meta.view.columns[28].name}</li>` : "")+
             ;
 
-        mrk.bindPopup(popupText)
+        mrk.bindPopup(popupText);
+       
 
     }
 };
@@ -78,4 +80,6 @@ drawAccidents();
 //     map.fitBounds(evt.target.getBounds());
 // });
 
+
+console.log(DATA.meta.view.columns[28].name);
 
