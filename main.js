@@ -16,7 +16,7 @@ let overlay = {
 
 let map = L.map("map", {
     center: [41.7625, -72.674167], //Hartford
-    zoom: 8,
+    zoom: 9,
     layers: [
         startLayer,
         overlay.drugaccidents
@@ -54,8 +54,28 @@ let drawAccidents = function () {
                 className: "ignore-me",
                 //iconSize: (100, 100)
             })
+            
         }).addTo(overlay.drugaccidents);
+
+        let popupText = `<h3>Details</h3>`+
+            `<b>Date:</b> ${element[9]}</br>`+
+            `<b>Personal Details:</b> ${element[12]}, ${element[11]}</br>`+
+            // `<b>Location of Death:</b> ${element[19]} (${element[17]}, ${element[18]})`+
+            (typeof element[19] == "Other" ? `<b>Location of Death:</b> ${element[20]} (${element[17]}, ${element[18]})` : `<b>Location of Death:</b> ${element[19]} (${element[17]}, ${element[18]})`)+
+            `</br><b>Cause of Death:</b> ${element[26]}</br>`+
+            `<b>Medical Preconditions:</b> ${element[27]}</br>`
+            // `<b>Detected Substances:</b> ${element[]}</br>`
+            ;
+
+        mrk.bindPopup(popupText)
+
     }
 };
 
 drawAccidents();
+
+// drawAccidents.on("loaded", function(evt) {
+//     map.fitBounds(evt.target.getBounds());
+// });
+
+
