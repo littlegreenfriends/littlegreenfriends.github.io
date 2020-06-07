@@ -2,7 +2,16 @@
 let startLayer = L.tileLayer.provider("Esri.WorldStreetMap");
 
 let overlay = {
-    drugaccidents: L.markerClusterGroup()
+    drugaccidents: L.markerClusterGroup({
+        //spiderfyOnMaxZoom: false
+        //disableClusteringAtZoom: true
+        polygonOptions: {
+            fillColor: "green",
+            color: "#3d9970",
+            weight: 1,
+            fillOpacity: 0.2
+        }
+    })
 };
 
 let map = L.map("map", {
