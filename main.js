@@ -2,7 +2,7 @@
 let startLayer = L.tileLayer.provider("Esri.WorldStreetMap");
 
 let overlay = {
-    drugaccidents: L.featureGroup()
+    drugaccidents: L.markerClusterGroup()
 };
 
 let map = L.map("map", {
