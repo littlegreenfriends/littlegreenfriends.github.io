@@ -2,7 +2,16 @@
 let startLayer = L.tileLayer.provider("Esri.WorldStreetMap");
 
 let overlay = {
-    drugaccidents: L.featureGroup()
+    drugaccidents: L.markerClusterGroup({
+        //spiderfyOnMaxZoom: false
+        //disableClusteringAtZoom: true
+        polygonOptions: {
+            fillColor: "green",
+            color: "#3d9970",
+            weight: 1,
+            fillOpacity: 0.2
+        }
+    })
 };
 
 let map = L.map("map", {
@@ -39,7 +48,13 @@ let drawAccidents = function () {
         // console.log("Sterbeort:", "(lat)", PoD[1], "--- (lng)", PoD[2])
         let lat = PoD[1];
         let lng = PoD[2];
-        let mrk = L.marker([lat, lng]).addTo(overlay.drugaccidents);
+        let mrk = L.marker([lat, lng], {
+            icon: L.divIcon({
+                html: `<div class="label-weed"><i class="fas fa-cannabis"></i>`,
+                className: "ignore-me",
+                //iconSize: (100, 100)
+            })
+        }).addTo(overlay.drugaccidents);
     }
 };
 
