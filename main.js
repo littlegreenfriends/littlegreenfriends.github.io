@@ -38,15 +38,15 @@ let baseMaps = {
 };
 
 let groupedOverlays = {
-    "Fatal Incidents": {
-        "Drug Accidents (total)": overlay.drugaccidents,
-        "Drug Accidents (female)": overlay.drugaccidents_female,
-        "Drug Accidents (male)": overlay.drugaccidents_male
+    "Fatal Drug Abuse Incidents": {
+        "Total": overlay.drugaccidents,
+        "Female": overlay.drugaccidents_female,
+        "Male": overlay.drugaccidents_male
     }
 };
 
 let options = {
-    exclusiveGroups: ["Fatal Incidents"],
+    exclusiveGroups: ["Fatal Drug Abuse Incidents"],
     groupCheckboxes: true
 }
 
