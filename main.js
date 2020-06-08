@@ -43,27 +43,16 @@ L.control.layers({
     "Drug Accidents": overlay.drugaccidents
 }).addTo(map);
 
-//Data
-// console.log("Datensatz", DATA);
-// console.log("Daten", DATA["data"])
 
-let drawAccidents = function () {
-    let AccData = DATA.data;
+let drawAccidents = function (datapoints, layer) {
 
-    for (let index in AccData) {
-        if (!AccData.hasOwnProperty(index)) continue;
-        let element = AccData[index];
+    for (let index in datapoints) {
+        if (!datapoints.hasOwnProperty(index)) continue;
+        let element = datapoints[index];
         // console.log(element);
         let PoD = element[46] //GeoInfo Sterbeort
-        // console.log("lat", element[46][1]);
-        // console.log("Eintrag:", index);
-        // console.log("Sterbeort:", "(lat)", PoD[1], "--- (lng)", PoD[2])
         let lat = PoD[1];
         let lng = PoD[2];
-
-        // if (element[42] == null) {
-        //     continue;
-        // }
 
         let mrk = L.marker([lat, lng], {
             // icon: L.divIcon({
@@ -78,7 +67,7 @@ let drawAccidents = function () {
                 iconUrl: "images/cannabis-solid-green.png"
             })
 
-        }).addTo(overlay.drugaccidents);
+        }).addTo(layer);
 
         //Aufbereiten von Informationen für Popup
         // let date = element[9].slice(0,10); //nicht alle Punkte werden angezeigt
@@ -134,7 +123,7 @@ let drawAccidents = function () {
     }
 };
 
-drawAccidents();
+drawAccidents(DATA.data, overlay.drugaccidents);
 
 // drawAccidents.on("loaded", function(evt) {
 //     map.fitBounds(evt.target.getBounds());
