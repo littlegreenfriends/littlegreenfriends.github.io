@@ -64,16 +64,9 @@ let drawAccidents = function (datapoints, layer) {
         let lng = PoD[2];
 
         let mrk = L.marker([lat, lng], {
-            // icon: L.divIcon({
-            //     html: `<div class="label-weed"><i class="fas fa-cannabis"></i>`,
-            //     // iconSize: [28, 28],
-            //     className: "ignore-me"
-            // })
-
             icon: L.icon({
                 iconSize: [28, 28],
-                // iconUrl: "images/pills-solid-green.png"
-                iconUrl: "images/cannabis-solid-green.png"
+                iconUrl: "images/pills-solid-green.png"
             })
 
         }).addTo(layer);
