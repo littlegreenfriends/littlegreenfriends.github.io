@@ -77,7 +77,8 @@ let drawAccidents = function () {
         // let date = element[9].slice(0,10); //nicht alle Punkte werden angezeigt
         // console.log(date)
 
-        let location; //of death
+        //Sterbeort
+        let location; 
         if (element[19] == "Other") {
             location = element[20]
         } else {
@@ -90,10 +91,15 @@ let drawAccidents = function () {
         }
 
         //Abfrage der nachgewiesenen Drogen
-        let DetectDrugs = [(28, element[28]), element[29], element[30], element[31], element[32], element[33], element[34], element[35], element[36], element[37], element[38], element[39], element[40], element[41], element[42], element[43], element[44]];
-        let substances = []
+        //Teste auf bestimmte Substanzen in element[28] bis element[44] - Sammeln in Array
+        let DetectDrugs = [];
+        for (let index = 28; index < 45; index++) {
+            DetectDrugs.push(element[index]);
+        }
 
-        for (let i = 0; i < DetectDrugs.length; i++) {
+        let substances = []; //Sammeln der nachgewiesenen Substanzen
+
+        for (let i = 0; i < DetectDrugs.length; i++) { //Index 0 startet mit element[28]
             let testDrug = DetectDrugs[i];
 
             let index = 28 + i; //Key für Element - gleich für DATA.data und DATA.meta
@@ -101,12 +107,14 @@ let drawAccidents = function () {
 
             if (testDrug == "Y") { //wenn Droge nachgewiesen ("Yes")
                 substance = DATA.meta.view.columns[index].name; //Name der Droge aus Metadaten abrufen
-                substances.push(substance) //Sammeln der nachgewiesenen Drogen in Array
+                substances.push(substance)
             }
-        }
+        };
 
         let detectSubst = substances.join("</li><li>"); //Zusammenfügen der Drogen in String bzw. Template für unsortierte Liste 
 
+
+        //Popup Text
         let popupText = `<h3>Details</h3>` +
             `<b>Date:</b> ${element[9]}</br>` +
             `<b>Personal Details:</b> ${element[12]}, ${element[11]}</br>` +
@@ -132,5 +140,3 @@ drawAccidents();
 // markers.on('clusterclick', function (a) {
 // 	a.layer.zoomToBounds({padding: [20, 20]});
 // });
-
-console.log(DATA.meta.view.columns[28].name);
