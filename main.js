@@ -1,7 +1,19 @@
 //Map Setup
 let startLayer = L.tileLayer.provider("Esri.WorldStreetMap");
 
+// let markers = L.markerClusterGroup({
+//     // spiderfyOnMaxZoom: true,
+//     // disableClusteringAtZoom: 13,
+//     polygonOptions: {
+//         fillColor: "green",
+//         color: "#3d9970",
+//         weight: 1,
+//         fillOpacity: 0.2
+//     }
+// });
+
 let overlay = {
+    // drugaccidents: markers,
     drugaccidents: L.markerClusterGroup({
         //spiderfyOnMaxZoom: false
         //disableClusteringAtZoom: true
@@ -59,24 +71,54 @@ let drawAccidents = function () {
                 iconSize: [28, 28],
                 iconUrl: "images/cannabis-solid-green.png"
             })
-   
 
-            
         }).addTo(overlay.drugaccidents);
 
-        let popupText = `<h3>Details</h3>`+
-            `<b>Date:</b> ${element[9]}</br>`+
-            `<b>Personal Details:</b> ${element[12]}, ${element[11]}</br>`+
+        // let date = element[9].slice(0,10); //nicht alle Punkte werden angezeigt
+        // console.log(date)
+
+        let location; //of death
+        if (element[19] == "Other") {
+            location = element[20]
+        } else {
+            location = element[19]
+        }
+
+        //medical precondition
+        if (element[27] !== null) {
+            // console.log(element[27]) //hier funktioniert Null Abfrage
+        }
+
+        //Abfrage der nachgewiesenen Drogen
+        let DetectDrugs = [(28, element[28]), element[29], element[30], element[31], element[32], element[33], element[34], element[35], element[36], element[37], element[38], element[39], element[40], element[41], element[42], element[43], element[44]];
+        let substances = []
+
+        for (let i = 0; i < DetectDrugs.length; i++) {
+            let testDrug = DetectDrugs[i];
+
+            let index = 28 + i; //Key für Element - gleich für DATA.data und DATA.meta
+            let substance;
+
+            if (testDrug == "Y") { //wenn Droge nachgewiesen ("Yes")
+                substance = DATA.meta.view.columns[index].name; //Name der Droge aus Metadaten abrufen
+                substances.push(substance) //Sammeln der nachgewiesenen Drogen in Array
+            }
+        }
+
+        let detectSubst = substances.join("</li><li>"); //Zusammenfügen der Drogen in String bzw. Template für unsortierte Liste 
+
+        let popupText = `<h3>Details</h3>` +
+            `<b>Date:</b> ${element[9]}</br>` +
+            `<b>Personal Details:</b> ${element[12]}, ${element[11]}</br>` +
             // `<b>Location of Death:</b> ${element[19]} (${element[17]}, ${element[18]})`+
-            (typeof element[19] === "Other" ? `<b>Location of Death:</b> ${element[20]} (${element[17]}, ${element[18]})` : `<b>Location of Death:</b> ${element[19]} (${element[17]}, ${element[18]})`)+
-            `</br><b>Cause of Death:</b> ${element[26]}</br>`+
-            `<b>Medical Preconditions:</b> ${element[27] || "-"}</br>`+
-            `<b>Detected Substances:</b></br>`
-            // (typeof element[28] == "Y" ? `<li>${DATA.meta.view.columns[28].name}</li>` : "")+
-            ;
+            `<b>Location of Death:</b> ${location || "-"}` +
+            `</br><b>Cause of Death:</b> ${element[26]}</br>` +
+            (typeof element[27] !== null ? `<b>Medical Preconditions:</b> ${element[27]}</br>` : "") + //zeigt noch null an
+            `<b>Detected Substance(s):</b></br>` +
+            `<ul><li>${detectSubst}</li></ul>`;
 
         mrk.bindPopup(popupText);
-       
+
 
     }
 };
@@ -87,6 +129,8 @@ drawAccidents();
 //     map.fitBounds(evt.target.getBounds());
 // });
 
+// markers.on('clusterclick', function (a) {
+// 	a.layer.zoomToBounds({padding: [20, 20]});
+// });
 
 console.log(DATA.meta.view.columns[28].name);
-
