@@ -49,11 +49,18 @@ let drawAccidents = function () {
         let lat = PoD[1];
         let lng = PoD[2];
         let mrk = L.marker([lat, lng], {
-            icon: L.divIcon({
-                html: `<div class="label-weed"><i class="fas fa-cannabis"></i>`,
-                className: "ignore-me",
-                //iconSize: (100, 100)
+            // icon: L.divIcon({
+            //     html: `<div class="label-weed"><i class="fas fa-cannabis"></i>`,
+            //     // iconSize: [28, 28],
+            //     className: "ignore-me"
+            // })
+
+            icon: L.icon({
+                iconSize: [28, 28],
+                iconUrl: "images/cannabis-solid-green.png"
             })
+   
+
             
         }).addTo(overlay.drugaccidents);
 
