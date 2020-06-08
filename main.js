@@ -31,15 +31,27 @@ let map = L.map("map", {
     ]
 });
 
-L.control.layers({
+let baseMaps = {
     "Esri.WorldStreetMap": L.tileLayer.provider("Esri.WorldStreetMap"),
     "Esri.WorldPhysical": L.tileLayer.provider("Esri.WorldPhysical"),
     "OpenTopoMap": L.tileLayer.provider("OpenTopoMap")
-}, {
-    "Drug Accidents (total)": overlay.drugaccidents,
-    "Drug Accidents (female)": overlay.drugaccidents_female,
-    "Drug Accidents (male)": overlay.drugaccidents_male
-}).addTo(map);
+};
+
+let groupedOverlays = {
+    "Fatal Incidents": {
+        "Drug Accidents (total)": overlay.drugaccidents,
+        "Drug Accidents (female)": overlay.drugaccidents_female,
+        "Drug Accidents (male)": overlay.drugaccidents_male
+    }
+};
+
+let options = {
+    exclusiveGroups: ["Fatal Incidents"],
+    groupCheckboxes: true
+}
+
+L.control.groupedLayers(baseMaps, groupedOverlays, options).addTo(map);
+
 
 let drawAccidents = function (datapoints, layer) {
 
