@@ -1,36 +1,24 @@
 //Map Setup
 let startLayer = L.tileLayer.provider("Esri.WorldStreetMap");
 
+let HoverStyleGreen = {
+    fillColor: "green",
+    color: "#3d9970",
+    weight: 1,
+    fillOpacity: 0.2
+};
+
 let overlay = {
     drugaccidents: L.markerClusterGroup({
         // spiderfyOnMaxZoom: true,
         // disableClusteringAtZoom: 13,
-        polygonOptions: {
-            fillColor: "green",
-            color: "#3d9970",
-            weight: 1,
-            fillOpacity: 0.2
-        }
+        polygonOptions: HoverStyleGreen
     }),
     drugaccidents_female: L.markerClusterGroup({
-        // spiderfyOnMaxZoom: true,
-        // disableClusteringAtZoom: 13,
-        polygonOptions: {
-            fillColor: "green",
-            color: "#3d9970",
-            weight: 1,
-            fillOpacity: 0.2
-        }
+        polygonOptions: HoverStyleGreen
     }),
     drugaccidents_male: L.markerClusterGroup({
-        // spiderfyOnMaxZoom: true,
-        // disableClusteringAtZoom: 13,
-        polygonOptions: {
-            fillColor: "green",
-            color: "#3d9970",
-            weight: 1,
-            fillOpacity: 0.2
-        }
+        polygonOptions: HoverStyleGreen
     })
 };
 
@@ -52,7 +40,6 @@ L.control.layers({
     "Drug Accidents (female)": overlay.drugaccidents_female,
     "Drug Accidents (male)": overlay.drugaccidents_male
 }).addTo(map);
-
 
 let drawAccidents = function (datapoints, layer) {
 
@@ -134,37 +121,37 @@ let drawAccidents = function (datapoints, layer) {
 };
 
 
-
+//Alle Fälle
 let drawAccidentsTotal = function () {
     drawAccidents(DATA.data, overlay.drugaccidents);
 }
 drawAccidentsTotal();
 
 
-let drawAccidentsFemale = function () {
-    let dataFemale = [];
-    for (let index in DATA.data) {
-        if (!DATA.data.hasOwnProperty(index)) continue;
-        let element = DATA.data[index];
+//Filter Funktion
+let filterData = function (data, index, key) {
+    let datalist = [];
+    for (let i in data) {
+        if (!data.hasOwnProperty(i)) continue;
+        let element = data[i];
 
-        if (element[12] == "Female") {
-            dataFemale.push(element) //Sammeln der Dateneinträge mit Attibut "Female"
+        if (element[index] == key) {
+            datalist.push(element)
         }
-    };
+    }
+    return datalist;
+}
+
+//Female Cases
+let drawAccidentsFemale = function () {
+    let dataFemale = filterData(DATA.data, 12, "Female");
     drawAccidents(dataFemale, overlay.drugaccidents_female);
 }
 drawAccidentsFemale();
 
+//Male Cases
 let drawAccidentsMale = function () {
-    let dataMale = [];
-    for (let index in DATA.data) {
-        if (!DATA.data.hasOwnProperty(index)) continue;
-        let element = DATA.data[index];
-
-        if (element[12] == "Male") {
-            dataMale.push(element) //Sammeln der Dateneinträge mit Attibut "Male"
-        }
-    };
+    let dataMale = filterData(DATA.data, 12, "Male");
     drawAccidents(dataMale, overlay.drugaccidents_male);
 }
 drawAccidentsMale();
