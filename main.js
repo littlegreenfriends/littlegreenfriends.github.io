@@ -74,6 +74,7 @@ let drawAccidents = function () {
 
             icon: L.icon({
                 iconSize: [28, 28],
+                // iconUrl: "images/pills-solid-green.png"
                 iconUrl: "images/cannabis-solid-green.png"
             })
 
