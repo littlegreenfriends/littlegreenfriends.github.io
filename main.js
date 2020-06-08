@@ -60,6 +60,11 @@ let drawAccidents = function () {
         // console.log("Sterbeort:", "(lat)", PoD[1], "--- (lng)", PoD[2])
         let lat = PoD[1];
         let lng = PoD[2];
+
+        // if (element[42] == null) {
+        //     continue;
+        // }
+
         let mrk = L.marker([lat, lng], {
             // icon: L.divIcon({
             //     html: `<div class="label-weed"><i class="fas fa-cannabis"></i>`,
@@ -74,20 +79,16 @@ let drawAccidents = function () {
 
         }).addTo(overlay.drugaccidents);
 
+        //Aufbereiten von Informationen für Popup
         // let date = element[9].slice(0,10); //nicht alle Punkte werden angezeigt
         // console.log(date)
 
         //Sterbeort
-        let location; 
+        let location;
         if (element[19] == "Other") {
             location = element[20]
         } else {
             location = element[19]
-        }
-
-        //medical precondition
-        if (element[27] !== null) {
-            // console.log(element[27]) //hier funktioniert Null Abfrage
         }
 
         //Abfrage der nachgewiesenen Drogen
@@ -96,12 +97,9 @@ let drawAccidents = function () {
         for (let index = 28; index < 45; index++) {
             DetectDrugs.push(element[index]);
         }
-
         let substances = []; //Sammeln der nachgewiesenen Substanzen
-
         for (let i = 0; i < DetectDrugs.length; i++) { //Index 0 startet mit element[28]
             let testDrug = DetectDrugs[i];
-
             let index = 28 + i; //Key für Element - gleich für DATA.data und DATA.meta
             let substance;
 
@@ -111,19 +109,23 @@ let drawAccidents = function () {
             }
         };
 
+        if (element[42] !== null) { //spezielle Abfrage für "Other"
+            substance = `Other: ${element[42]}`
+            substances.push(substance)
+        }
         let detectSubst = substances.join("</li><li>"); //Zusammenfügen der Drogen in String bzw. Template für unsortierte Liste 
 
-
         //Popup Text
-        let popupText = `<h3>Details</h3>` +
+        let popupText = `<h3>Details on fatal drug abuse incident</h3>` +
             `<b>Date:</b> ${element[9]}</br>` +
             `<b>Personal Details:</b> ${element[12]}, ${element[11]}</br>` +
-            // `<b>Location of Death:</b> ${element[19]} (${element[17]}, ${element[18]})`+
-            `<b>Location of Death:</b> ${location || "-"}` +
-            `</br><b>Cause of Death:</b> ${element[26]}</br>` +
-            (typeof element[27] !== null ? `<b>Medical Preconditions:</b> ${element[27]}</br>` : "") + //zeigt noch null an
-            `<b>Detected Substance(s):</b></br>` +
-            `<ul><li>${detectSubst}</li></ul>`;
+            `<b>Location of Death:</b> ${location || "-"} (${element[17] || "-"}, ${element[18] || "-"})</br>`+
+            // `</br><b>Location of Death:</b> ${location || "-"}` +
+            `<b>Cause of Death:</b> ${element[26]}</br>` +
+            // (typeof element[27] !== "null" ? `<b>Medical Preconditions:</b> ${element[27]}</br>` : "") + //zeigt noch null an
+            `<b>Medical Preconditions:</b> ${element[27] || "-"}</br>`+
+            `<b>Detected Substance(s):</b>` +
+            `<ul><li>${detectSubst || "no information"}</li></ul>`;
 
         mrk.bindPopup(popupText);
 
