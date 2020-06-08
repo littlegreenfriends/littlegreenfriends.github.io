@@ -1,22 +1,30 @@
 //Map Setup
 let startLayer = L.tileLayer.provider("Esri.WorldStreetMap");
 
-// let markers = L.markerClusterGroup({
-//     // spiderfyOnMaxZoom: true,
-//     // disableClusteringAtZoom: 13,
-//     polygonOptions: {
-//         fillColor: "green",
-//         color: "#3d9970",
-//         weight: 1,
-//         fillOpacity: 0.2
-//     }
-// });
-
 let overlay = {
-    // drugaccidents: markers,
     drugaccidents: L.markerClusterGroup({
-        //spiderfyOnMaxZoom: false
-        //disableClusteringAtZoom: true
+        // spiderfyOnMaxZoom: true,
+        // disableClusteringAtZoom: 13,
+        polygonOptions: {
+            fillColor: "green",
+            color: "#3d9970",
+            weight: 1,
+            fillOpacity: 0.2
+        }
+    }),
+    drugaccidents_female: L.markerClusterGroup({
+        // spiderfyOnMaxZoom: true,
+        // disableClusteringAtZoom: 13,
+        polygonOptions: {
+            fillColor: "green",
+            color: "#3d9970",
+            weight: 1,
+            fillOpacity: 0.2
+        }
+    }),
+    drugaccidents_male: L.markerClusterGroup({
+        // spiderfyOnMaxZoom: true,
+        // disableClusteringAtZoom: 13,
         polygonOptions: {
             fillColor: "green",
             color: "#3d9970",
@@ -40,7 +48,9 @@ L.control.layers({
     "Esri.WorldPhysical": L.tileLayer.provider("Esri.WorldPhysical"),
     "OpenTopoMap": L.tileLayer.provider("OpenTopoMap")
 }, {
-    "Drug Accidents": overlay.drugaccidents
+    "Drug Accidents (total)": overlay.drugaccidents,
+    "Drug Accidents (female)": overlay.drugaccidents_female,
+    "Drug Accidents (male)": overlay.drugaccidents_male
 }).addTo(map);
 
 
@@ -106,14 +116,14 @@ let drawAccidents = function (datapoints, layer) {
         let detectSubst = substances.join("</li><li>"); //Zusammenfügen der Drogen in String bzw. Template für unsortierte Liste 
 
         //Popup Text
-        let popupText = `<h3>Details on fatal drug abuse incident</h3>` +
+        let popupText = `<h3>Details on Fatal Drug Abuse Incident</h3>` +
             `<b>Date:</b> ${element[9]}</br>` +
             `<b>Personal Details:</b> ${element[12]}, ${element[11]}</br>` +
-            `<b>Location of Death:</b> ${location || "-"} (${element[17] || "-"}, ${element[18] || "-"})</br>`+
+            `<b>Location of Death:</b> ${location || "-"} (${element[17] || "-"}, ${element[18] || "-"})</br>` +
             // `</br><b>Location of Death:</b> ${location || "-"}` +
             `<b>Cause of Death:</b> ${element[26]}</br>` +
             // (typeof element[27] !== "null" ? `<b>Medical Preconditions:</b> ${element[27]}</br>` : "") + //zeigt noch null an
-            `<b>Medical Preconditions:</b> ${element[27] || "-"}</br>`+
+            `<b>Medical Preconditions:</b> ${element[27] || "-"}</br>` +
             `<b>Detected Substance(s):</b>` +
             `<ul><li>${detectSubst || "no information"}</li></ul>`;
 
@@ -123,7 +133,43 @@ let drawAccidents = function (datapoints, layer) {
     }
 };
 
-drawAccidents(DATA.data, overlay.drugaccidents);
+
+
+let drawAccidentsTotal = function () {
+    drawAccidents(DATA.data, overlay.drugaccidents);
+}
+drawAccidentsTotal();
+
+
+let drawAccidentsFemale = function () {
+    let dataFemale = [];
+    for (let index in DATA.data) {
+        if (!DATA.data.hasOwnProperty(index)) continue;
+        let element = DATA.data[index];
+
+        if (element[12] == "Female") {
+            dataFemale.push(element) //Sammeln der Dateneinträge mit Attibut "Female"
+        }
+    };
+    drawAccidents(dataFemale, overlay.drugaccidents_female);
+}
+drawAccidentsFemale();
+
+let drawAccidentsMale = function () {
+    let dataMale = [];
+    for (let index in DATA.data) {
+        if (!DATA.data.hasOwnProperty(index)) continue;
+        let element = DATA.data[index];
+
+        if (element[12] == "Male") {
+            dataMale.push(element) //Sammeln der Dateneinträge mit Attibut "Male"
+        }
+    };
+    drawAccidents(dataMale, overlay.drugaccidents_male);
+}
+drawAccidentsMale();
+
+
 
 // drawAccidents.on("loaded", function(evt) {
 //     map.fitBounds(evt.target.getBounds());
