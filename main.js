@@ -123,7 +123,7 @@ let drawAccidents = function (datapoints, layer) {
 
 
     }
-    
+
     map.fitBounds(layer.getBounds())
 };
 
@@ -165,39 +165,38 @@ drawAccidentsMale();
 
 
 
-// drawAccidents.on("loaded", function(evt) {
-//     map.fitBounds(evt.target.getBounds());
-// });
+//Anzahl der Fälle pro County anzeigen 
+let drawCountyCount = function () {
 
-// markers.on('clusterclick', function (a) {
-// 	a.layer.zoomToBounds({padding: [20, 20]});
-// });
+    let data = DATA.data;
+    // console.log(data);
 
-//county tryout
-// console.log(COUNTIES.data);
+    data.sort(function (row1, row2) {
+        let date1, date2;
 
-let drawCounties = function () {
-    let Counties = COUNTIES.data;
-
-    for (let index in Counties) {
-        if (!Counties.hasOwnProperty(index)) continue;
-        
-        let County = Counties[index];
-
-        let polygon = County[8].split(",");
-        // polygon = polygon.replace(" ", ",");
-        for (let i in polygon) {
-            let element = polygon[i];
-            console.log(element)
-
-            // element = element.split(/[ ]+/).join(',');
-            // element = element.replace(",", "],[")
+        date1 = row1[9];
+        date2 = row2[9];
+        if (date1 < date2) {
+            return -1;
+        } else if (date1 > date2) {
+            return 1;
         }
+        return 0;
+    });
 
+    // console.log("data sorted", data)
 
-        console.log(polygon);
+    for (let index in data) {
+        if (!data.hasOwnProperty(index)) continue;
+        let element = data[index];
+
+        if (!element.hasOwnProperty(18)) continue; //DeathCounty
+
+        let DeathCounty = element[18]
+
+        console.log(element[9]);
+        console.log(DeathCounty);
     }
-
 };
 
-drawCounties();
+drawCountyCount();
