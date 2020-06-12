@@ -123,6 +123,8 @@ let drawAccidents = function (datapoints, layer) {
 
 
     }
+    
+    map.fitBounds(layer.getBounds())
 };
 
 
@@ -170,3 +172,32 @@ drawAccidentsMale();
 // markers.on('clusterclick', function (a) {
 // 	a.layer.zoomToBounds({padding: [20, 20]});
 // });
+
+//county tryout
+// console.log(COUNTIES.data);
+
+let drawCounties = function () {
+    let Counties = COUNTIES.data;
+
+    for (let index in Counties) {
+        if (!Counties.hasOwnProperty(index)) continue;
+        
+        let County = Counties[index];
+
+        let polygon = County[8].split(",");
+        // polygon = polygon.replace(" ", ",");
+        for (let i in polygon) {
+            let element = polygon[i];
+            console.log(element)
+
+            // element = element.split(/[ ]+/).join(',');
+            // element = element.replace(",", "],[")
+        }
+
+
+        console.log(polygon);
+    }
+
+};
+
+drawCounties();
