@@ -171,7 +171,7 @@ let drawCountyCount = function () {
     let data = DATA.data;
     // console.log(data);
 
-    data.sort(function (row1, row2) {
+    data.sort(function (row1, row2) { //Sortieren der Daten nach Todesdatum
         let date1, date2;
 
         date1 = row1[9];
@@ -186,6 +186,9 @@ let drawCountyCount = function () {
 
     // console.log("data sorted", data)
 
+    //Zählvariablen für alle Counties + Total
+    let total = count = hartford = newhaven = fairfield = newlondon = litchfield = middlesex = windham = tolland = 0;
+
     for (let index in data) {
         if (!data.hasOwnProperty(index)) continue;
         let element = data[index];
@@ -193,10 +196,110 @@ let drawCountyCount = function () {
         if (!element.hasOwnProperty(18)) continue; //DeathCounty
 
         let DeathCounty = element[18]
+        let date = element[9]
 
-        console.log(element[9]);
-        console.log(DeathCounty);
-    }
+
+        //Daten nach Counties kategorisieren und zählen
+        for (let i in county_center) {
+            let county = county_center[i];
+
+            if (DeathCounty == county[0]) {
+                // console.log(DeathCounty, county[0], date)
+                count++;
+
+                switch (DeathCounty) {
+                    case "HARTFORD":
+                        // console.log(county_center[0][0], county_center[0][1], county_center[0][2])
+                        hartford++;
+                        break;
+                    case "NEW HAVEN":
+                        // console.log(county_center[1][0], county_center[1][1], county_center[1][2])
+                        newhaven++;
+                        break;
+                    case "FAIRFIELD":
+                        // console.log(county_center[2][0], county_center[2][1], county_center[2][2])
+                        fairfield++;
+                        break;
+                    case "NEW LONDON":
+                        // console.log(county_center[3][0], county_center[3][1], county_center[3][2])
+                        newlondon++;
+                        break;
+                    case "LITCHFIELD":
+                        // console.log(county_center[4][0], county_center[4][1], county_center[4][2])
+                        litchfield++;
+                        break;
+                    case "MIDDLESEX":
+                        // console.log(county_center[5][0], county_center[5][1], county_center[5][2])
+                        middlesex++;
+                        break;
+                    case "WINDHAM":
+                        // console.log(county_center[6][0], county_center[6][1], county_center[6][2])
+                        windham++;
+                        break;
+                    case "TOLLAND":
+                        // console.log(county_center[7][0], county_center[7][1], county_center[7][2])
+                        tolland++;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+    }; //Ende Schleife Datensatz
+
+    //Kontrolle
+    console.log("hardfort", hartford);
+    console.log("newhaven", newhaven);
+    console.log("fairfield", fairfield);
+    console.log("newlondon", newlondon);
+    console.log("litchfield", litchfield);
+    console.log("middlesex", middlesex);
+    console.log("windham", windham);
+    console.log("tolland", tolland);
+
+    console.log("total", count);
+
+    // for (let i in county_center) {
+    //     let county = county_center[i]
+
+    //     switch (county[0]) {
+    //         case "HARTFORD":
+    //             let r = Math.sqrt(hartford / Math.PI);
+    //             let circle = L.circleMarker([county[1], county[2]], {
+    //                 radius: r,
+    //                 color: "#3d9970"
+    //             }).addTo(map);
+
+    //             circle.bindPopup(`Hartford: ${hartford}`);
+
+    //         case "NEW HAVEN":
+    //             // console.log(county_center[1][0], county_center[1][1], county_center[1][2])
+    //             let r2 = Math.sqrt(newhaven / Math.PI);
+    //             let circle2 = L.circleMarker([county[1], county[2]], {
+    //                 radius: r2,
+    //                 color: "#3d9970"
+    //             }).addTo(map);
+
+    //             circle.bindPopup(`New Haven: ${newhaven}`);
+
+    //         default:
+    //             break;
+    //     }
+    // };
+
+    let s = 1;
+    let r = Math.sqrt(hartford / Math.PI);
+    let circle = L.circleMarker([county_center[0][1], county_center[0][2]], {
+        radius: r,
+        color: "#3d9970"
+    }).addTo(map);
+
+    circle.bindPopup(`Hartford: ${hartford}`);
+
+
 };
 
 drawCountyCount();
