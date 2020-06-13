@@ -167,24 +167,7 @@ drawAccidentsMale();
 
 //Anzahl der Fälle pro County anzeigen 
 let CountyCount = function () {
-
     let data = DATA.data;
-    // console.log(data);
-
-    data.sort(function (row1, row2) { //Sortieren der Daten nach Todesdatum
-        let date1, date2;
-
-        date1 = row1[9];
-        date2 = row2[9];
-        if (date1 < date2) {
-            return -1;
-        } else if (date1 > date2) {
-            return 1;
-        }
-        return 0;
-    });
-
-    // console.log("data sorted", data)
 
     //Zählvariablen für alle Counties + Total
     let total = count = hartford = newhaven = fairfield = newlondon = litchfield = middlesex = windham = tolland = 0;
@@ -204,35 +187,27 @@ let CountyCount = function () {
         //Daten nach Counties kategorisieren und zählen
         switch (DeathCounty) {
             case "HARTFORD":
-                // console.log(county_center[0][0], county_center[0][1], county_center[0][2])
                 hartford++;
                 break;
             case "NEW HAVEN":
-                // console.log(county_center[1][0], county_center[1][1], county_center[1][2])
                 newhaven++;
                 break;
             case "FAIRFIELD":
-                // console.log(county_center[2][0], county_center[2][1], county_center[2][2])
                 fairfield++;
                 break;
             case "NEW LONDON":
-                // console.log(county_center[3][0], county_center[3][1], county_center[3][2])
                 newlondon++;
                 break;
             case "LITCHFIELD":
-                // console.log(county_center[4][0], county_center[4][1], county_center[4][2])
                 litchfield++;
                 break;
             case "MIDDLESEX":
-                // console.log(county_center[5][0], county_center[5][1], county_center[5][2])
                 middlesex++;
                 break;
             case "WINDHAM":
-                // console.log(county_center[6][0], county_center[6][1], county_center[6][2])
                 windham++;
                 break;
             case "TOLLAND":
-                // console.log(county_center[7][0], county_center[7][1], county_center[7][2])
                 tolland++;
                 break;
 
@@ -244,7 +219,7 @@ let CountyCount = function () {
     //Sammeln der Counts pro County
     //Reihenfolge in Countarray wie Counties in Variable "county_center"
     countarray = [hartford, newhaven, fairfield, newlondon, litchfield, middlesex, windham, tolland];
-    console.log(countarray);
+    // console.log(countarray);
     return countarray;
 };
 
