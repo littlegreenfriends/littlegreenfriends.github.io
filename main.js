@@ -166,7 +166,7 @@ drawAccidentsMale();
 
 
 //Anzahl der Fälle pro County anzeigen 
-let drawCountyCount = function () {
+let CountyCount = function () {
 
     let data = DATA.data;
     // console.log(data);
@@ -189,6 +189,8 @@ let drawCountyCount = function () {
     //Zählvariablen für alle Counties + Total
     let total = count = hartford = newhaven = fairfield = newlondon = litchfield = middlesex = windham = tolland = 0;
 
+    let countarray = [];
+
     for (let index in data) {
         if (!data.hasOwnProperty(index)) continue;
         let element = data[index];
@@ -197,109 +199,74 @@ let drawCountyCount = function () {
 
         let DeathCounty = element[18]
         let date = element[9]
-
+        // console.log(date);
 
         //Daten nach Counties kategorisieren und zählen
-        for (let i in county_center) {
-            let county = county_center[i];
+        switch (DeathCounty) {
+            case "HARTFORD":
+                // console.log(county_center[0][0], county_center[0][1], county_center[0][2])
+                hartford++;
+                break;
+            case "NEW HAVEN":
+                // console.log(county_center[1][0], county_center[1][1], county_center[1][2])
+                newhaven++;
+                break;
+            case "FAIRFIELD":
+                // console.log(county_center[2][0], county_center[2][1], county_center[2][2])
+                fairfield++;
+                break;
+            case "NEW LONDON":
+                // console.log(county_center[3][0], county_center[3][1], county_center[3][2])
+                newlondon++;
+                break;
+            case "LITCHFIELD":
+                // console.log(county_center[4][0], county_center[4][1], county_center[4][2])
+                litchfield++;
+                break;
+            case "MIDDLESEX":
+                // console.log(county_center[5][0], county_center[5][1], county_center[5][2])
+                middlesex++;
+                break;
+            case "WINDHAM":
+                // console.log(county_center[6][0], county_center[6][1], county_center[6][2])
+                windham++;
+                break;
+            case "TOLLAND":
+                // console.log(county_center[7][0], county_center[7][1], county_center[7][2])
+                tolland++;
+                break;
 
-            if (DeathCounty == county[0]) {
-                // console.log(DeathCounty, county[0], date)
-                count++;
-
-                switch (DeathCounty) {
-                    case "HARTFORD":
-                        // console.log(county_center[0][0], county_center[0][1], county_center[0][2])
-                        hartford++;
-                        break;
-                    case "NEW HAVEN":
-                        // console.log(county_center[1][0], county_center[1][1], county_center[1][2])
-                        newhaven++;
-                        break;
-                    case "FAIRFIELD":
-                        // console.log(county_center[2][0], county_center[2][1], county_center[2][2])
-                        fairfield++;
-                        break;
-                    case "NEW LONDON":
-                        // console.log(county_center[3][0], county_center[3][1], county_center[3][2])
-                        newlondon++;
-                        break;
-                    case "LITCHFIELD":
-                        // console.log(county_center[4][0], county_center[4][1], county_center[4][2])
-                        litchfield++;
-                        break;
-                    case "MIDDLESEX":
-                        // console.log(county_center[5][0], county_center[5][1], county_center[5][2])
-                        middlesex++;
-                        break;
-                    case "WINDHAM":
-                        // console.log(county_center[6][0], county_center[6][1], county_center[6][2])
-                        windham++;
-                        break;
-                    case "TOLLAND":
-                        // console.log(county_center[7][0], county_center[7][1], county_center[7][2])
-                        tolland++;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
+            default:
+                break;
         }
+    };
 
-    }; //Ende Schleife Datensatz
+    //Sammeln der Counts pro County
+    //Reihenfolge in Countarray wie Counties in Variable "county_center"
+    countarray = [hartford, newhaven, fairfield, newlondon, litchfield, middlesex, windham, tolland];
+    console.log(countarray);
+    return countarray;
+};
 
-    //Kontrolle
-    console.log("hardfort", hartford);
-    console.log("newhaven", newhaven);
-    console.log("fairfield", fairfield);
-    console.log("newlondon", newlondon);
-    console.log("litchfield", litchfield);
-    console.log("middlesex", middlesex);
-    console.log("windham", windham);
-    console.log("tolland", tolland);
+let CountArray = CountyCount();
 
-    console.log("total", count);
+let drawCountyCount = function () {
+    for (let i in county_center) {
+        let county = county_center[i]
+        let countCounty = CountArray[i]
 
-    // for (let i in county_center) {
-    //     let county = county_center[i]
-
-    //     switch (county[0]) {
-    //         case "HARTFORD":
-    //             let r = Math.sqrt(hartford / Math.PI);
-    //             let circle = L.circleMarker([county[1], county[2]], {
-    //                 radius: r,
-    //                 color: "#3d9970"
-    //             }).addTo(map);
-
-    //             circle.bindPopup(`Hartford: ${hartford}`);
-
-    //         case "NEW HAVEN":
-    //             // console.log(county_center[1][0], county_center[1][1], county_center[1][2])
-    //             let r2 = Math.sqrt(newhaven / Math.PI);
-    //             let circle2 = L.circleMarker([county[1], county[2]], {
-    //                 radius: r2,
-    //                 color: "#3d9970"
-    //             }).addTo(map);
-
-    //             circle.bindPopup(`New Haven: ${newhaven}`);
-
-    //         default:
-    //             break;
-    //     }
-    // };
-
-    let s = 1;
-    let r = Math.sqrt(hartford / Math.PI);
-    let circle = L.circleMarker([county_center[0][1], county_center[0][2]], {
-        radius: r,
-        color: "#3d9970"
-    }).addTo(map);
-
-    circle.bindPopup(`Hartford: ${hartford}`);
-
-
+        // console.log(countCounty, county);
+    
+        let s = 4;
+        let r = Math.sqrt(countCounty * s / Math.PI);
+        let circle = L.circleMarker([county[1], county[2]], {
+            radius: r,
+            color: "#85144b"
+        }).addTo(map);
+    
+        circle.bindPopup(`${county[0]}: ${countCounty}`);
+    
+    };
 };
 
 drawCountyCount();
