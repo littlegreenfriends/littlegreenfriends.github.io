@@ -24,6 +24,7 @@ let overlay = {
 
 let map = L.map("map", {
     fullscreenControl: true,
+    zoomControl: false,
     center: [41.7625, -72.674167], //Hartford
     zoom: 9,
     layers: [
@@ -31,6 +32,10 @@ let map = L.map("map", {
         overlay.drugaccidents
     ]
 });
+
+//ZoomHome-Funktion
+let zoomHome = L.Control.zoomHome();
+zoomHome.addTo(map);
 
 let baseMaps = {
     "Esri.WorldStreetMap": L.tileLayer.provider("Esri.WorldStreetMap"),
