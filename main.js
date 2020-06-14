@@ -23,6 +23,7 @@ let overlay = {
 };
 
 let map = L.map("map", {
+    fullscreenControl: true,
     center: [41.7625, -72.674167], //Hartford
     zoom: 9,
     layers: [
