@@ -172,9 +172,7 @@ drawAccidentsMale();
 
 
 //Anzahl der Fälle pro County anzeigen 
-let CountyCount = function () {
-    let data = DATA.data;
-
+let CountyCount = function (data) {
     //Zählvariablen für alle Counties + Total
     let total = count = hartford = newhaven = fairfield = newlondon = litchfield = middlesex = windham = tolland = 0;
 
@@ -229,25 +227,97 @@ let CountyCount = function () {
     return countarray;
 };
 
-let CountArray = CountyCount();
+let CountArray = CountyCount(DATA.data);
 
-let drawCountyCount = function () {
+let drawCountyCount = function (ArrayWithCountyCounts) {
     for (let i in county_center) {
         let county = county_center[i]
-        let countCounty = CountArray[i]
+        let countSingleCounty = ArrayWithCountyCounts[i]
 
         // console.log(countCounty, county);
     
         let s = 4;
-        let r = Math.sqrt(countCounty * s / Math.PI);
+        let r = Math.sqrt(countSingleCounty * s / Math.PI);
         let circle = L.circleMarker([county[1], county[2]], {
             radius: r,
             color: "#85144b"
         }).addTo(map);
     
-        circle.bindPopup(`${county[0]}: ${countCounty}`);
+        circle.bindPopup(`${county[0]}: ${countSingleCounty}`);
     
     };
 };
 
-drawCountyCount();
+drawCountyCount(CountArray);
+
+
+//Funktion zum Zählen der Fälle pro County pro Monat
+let CountyCountsPerMonth = function () {
+    let data = DATA.data;
+
+    //Sortieren des Datensatzes nach Todesdatum
+    data.sort(function (row1, row2) {
+        let date1, date2;
+
+        date1 = row1[9];
+        date2 = row2[9];
+        if (date1 < date2) { 
+            return -1;
+        } else if (date1 > date2) {
+            return 1;
+        }
+        return 0;
+    });
+
+    //console.log("Nach Datum sortiert:", data);
+
+    //Einzelne Monate abfragen
+    let collectMonth = []; //Sammelt alle Dateneinträge eines Monats
+    let collectTotal = []; //Kontroll Array
+    let collectAllCountsPerMonth = []; //Sammelt alle CountyCounts pro Monat
+
+    //Zeilenweiser Vergleich von Einträgen, um Monate zu differenzieren 
+    for (let i = 1; i < data.length; i++) {
+        let element1 = data[i-1]; //Eintrag 1 wird mit Eintrag 2 verglichen
+        let element2 = data[i];
+
+        //Datum im Datensatz ist in ISO Format gespeichert --> Abruf mit "new Date"
+        let date1 = new Date(element1[9]); 
+        let date2 = new Date(element2[9]);
+
+        let year1 = date1.getFullYear(); //Jahr
+        let month1 = date1.getMonth() + 1; //Monat (Hintergrund von +1: Month Index ist 0-baisert (Januar = 0))
+        let YearMonth = date1.toISOString().substring(0,7); //Information Monat 
+
+        let year2 = date2.getFullYear(); //Jahr
+        let month2 = date2.getMonth() + 1; //Monat (Hintergrund von +1: Month Index ist 0-baisert (Januar = 0))
+
+        //ID für jeden Monat aus Summe von "Jahr" und "Monat" gebildet
+        //Dadurch können Monate voneinander unterschieden werden 
+        let monthID1 = year1 + month1; //z.B. Januar 2012 = 2013 (Faktor 333 für unique ID)
+        let monthID2 = year2 + month2; //z.B. Februar 2012 = 2014 (Faktor 333 für unique ID)
+
+        //Vergleich der Dateneinträge
+        if (monthID1 == monthID2) { //solange gleiche "MonatID" (ergo gleicher Monat)
+            collectMonth.push(element1);
+            collectTotal.push(element1); //Kontroll Array
+            // console.log(collectMonth);
+            continue; //Nächstes "Datenpaar" abfragen
+
+        } else { // = Monatsgrenze (element1 in anderem Monat als element2)
+            collectMonth.push(element1); //letzter Eintrag des Monats
+            collectTotal.push(element1); //letzter Eintrag des Monats (Kontroll Array)
+
+            // console.log(collectMonth);
+            let countMonth = CountyCount(collectMonth); //Zählen der Todesfälle pro County pro Monat
+            collectAllCountsPerMonth.push([YearMonth, countMonth])
+
+            // console.log(year1, month1, countMonth, "Einträge: ", collectMonth.length);
+            collectMonth = []; //Array leeren für nächsten Monat
+        };
+    };
+    // console.log("total check", collectTotal);
+    console.log(collectAllCountsPerMonth);
+};
+
+CountyCountsPerMonth();
