@@ -12,6 +12,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="modal.css">
     <script src="data.js"></script>
     <script defer src="main.js"></script>
 </head>
@@ -22,8 +23,7 @@
         <nav>
             <div class="winmax">
                 <i class="fas fa-map"></i> <a href="index.html">Interaktive Karte</a> |
-                <i class="fas fa-map-marker"></i> <a
-                    href="info_region.html">Informationen über Connecticut</a> |
+                <i class="fas fa-map-marker"></i> <a href="info_region.html">Informationen über Connecticut</a> |
                 <i class="fas fa-tablets"></i> <a href="info_drugs.html">Informationen über Drogen</a> |
                 <i class="fas fa-phone"></i> <i class="fas fa-info"></i> <a
                     href="https://www.sucht-und-drogen-hotline.de/">Homepage Drogenberatung</a>
@@ -90,13 +90,21 @@
             </p>
 
             <figure id="drugs-classes">
-                <img id="myImg" src="images/drugs937_988.jpg" alt="Drogen Klassifizierungen"><!-- 937x988 Pixel 72dpi wikipedia-drogen-->
+                <img id="myImg" src="images/drugs937_988.jpg" alt="Drogen Klassifizierungen" style="width:100%;max-width:300px">
+                <!-- 937x988 Pixel 72dpi wikipedia-drogen-->
                 <!-- figure erzeugt mir Zusammenhang Bild mit Bildunterschrift >> figcaption-->
                 <figcaption><i class="fas fa-camera"></i> Drogen Klassifizierungen.
                     <a href="https://de.wikipedia.org/wiki/Droge#/media/Datei:Drogenklassifikation.svg">&copy; Bild
                         LordToran</a>
                 </figcaption>
             </figure>
+        </div>
+
+        <!--Modal einbetten-->
+        <div id="myModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="img01">
+            <div id="caption"></div>
         </div>
 
         <h1>Informationen zu den häufigsten todesverursachenden Drogen im US-Bundesstaat Connecticut</h1>
@@ -194,12 +202,10 @@
                     Das psychische Abhängigkeitspotential wird allerdings als sehr hoch bewertet.</a></li>
         </ul>
 
-
-
-
-
-
     </main>
+
+    <!-- Skript für Modal Bildvergrößerung. Muss hier geladen werden, da es im Head sonst nicht funktioniert -->
+    <script src="modal.js"></script>
 
 </body>
 

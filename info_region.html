@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="info_region.css">
+    <link rel="stylesheet" href="modal.css">
     <script src="data.js"></script>
     <script defer src="main.js"></script>
 </head>
@@ -133,7 +134,7 @@
             allgemein veranschaulicht.
         </p>
         <figure>
-            <img src="images/nationaldrugoverdose2018-graph2.jpg">
+            <img id="myImg" src="images/nationaldrugoverdose2018-graph2.jpg" alt="Fatale Unfälle aufgrund von Drogenmissbrauch in den USA von 1999 bis 2018" style="width:100%;max-width:500px">
             <figcaption><i class="fas fa-camera"></i> Fatale Unfälle aufgrund von Drogenmissbrauch in den USA von
                 1999 bis 2018.
                 <a href="https://www.drugabuse.gov/drug-topics/trends-statistics/overdose-death-rates">&copy;
@@ -141,9 +142,18 @@
             </figcaption>
         </figure>
 
+        <!--Modal einbetten-->
+        <div id="myModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="img01">
+            <div id="caption"></div>
+        </div>
+
         </p>
     </main>
 
+    <!-- Skript für Modal Bildvergrößerung. Muss hier geladen werden, da es im Head sonst nicht funktioniert -->
+    <script src="modal.js"></script>
 </body>
 
 
