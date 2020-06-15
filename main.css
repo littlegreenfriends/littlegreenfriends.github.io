@@ -53,3 +53,7 @@ main figure img  {
     max-width: 100%;
     height: auto;
 }
+
+main h1 figure img {
+        border-radius: 50%;
+}
