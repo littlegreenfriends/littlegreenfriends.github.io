@@ -335,7 +335,7 @@ let AllCountsPerMonth = CountyCountsPerMonth(DATA.data);
 
 let slider = document.querySelector("#slider");
 slider.min = 0;
-slider.max = AllCountsPerMonth.length;
+slider.max = AllCountsPerMonth.length-1;
 slider.step = 1;
 
 slider.onchange = function () {
@@ -343,4 +343,41 @@ slider.onchange = function () {
     let index = slider.value;
     let dataMonth = AllCountsPerMonth[index][2];
     drawCountyCount(dataMonth);
+};
+
+//Animation
+let playButton = document.querySelector("#play");
+let runningAnimation = null; 
+
+playButton.onclick = function () {
+    overlay.accidents_county.clearLayers();
+    overlay.accidents_county.addTo(map);
+
+    let value = slider.min; //Startet bei Minimum (0)
+    if (slider.value == slider.max) { 
+        value = slider.min;
+    } else {
+        value = slider.value; //Wert des Sliders 
+    }
+
+    playButton.value = "⏸";
+
+    if (runningAnimation) {
+        window.clearInterval(runningAnimation);
+        playButton.value = "▶";
+        runningAnimation = null;
+    } else {
+
+        runningAnimation = window.setInterval(function () { //Funktion wird als Variable definiert
+            slider.value = value; //Wert wird der Sliderposition übergeben
+            drawCountyCount(AllCountsPerMonth[slider.value][2]);
+            value++;
+
+            if (value > slider.max) { //bei einem Wert größer als max
+                window.clearInterval(runningAnimation);
+                playButton.value = "▶";
+                runningAnimation = null;
+            }
+        }, 100)
+    }
 }
