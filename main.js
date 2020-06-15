@@ -82,8 +82,8 @@ let drawAccidents = function (datapoints, layer) {
         }).addTo(layer);
 
         //Aufbereiten von Informationen für Popup
-        let date = new Date (element[9]);
-        let YearMonthDay = date.toISOString().substring(0, 10); 
+        let date = new Date(element[9]);
+        let YearMonthDay = date.toISOString().substring(0, 10);
 
         //Sterbeort
         let location;
@@ -256,9 +256,7 @@ drawCountyCount(CountArray);
 
 
 //Funktion zum Zählen der Fälle pro County pro Monat
-let CountyCountsPerMonth = function () {
-    let data = DATA.data;
-
+let CountyCountsPerMonth = function (data) {
     //Sortieren des Datensatzes nach Todesdatum
     data.sort(function (row1, row2) {
         let date1, date2;
@@ -278,7 +276,8 @@ let CountyCountsPerMonth = function () {
     //Einzelne Monate abfragen
     let collectMonth = []; //Sammelt alle Dateneinträge eines Monats
     let collectTotal = []; //Kontroll Array
-    let collectAllCountsPerMonth = []; //Sammelt alle CountyCounts pro Monat
+    let collectAllCountsPerMonth = []; //Sammelt alle CountyCounts pro Monat + Akkumulierte CountyCounts
+    let collectAccCountsOfMonths = [0, 0, 0, 0, 0, 0, 0, 0]; //Akkumuliert monatliche CountyCounts 
 
     //Zeilenweiser Vergleich von Einträgen, um Monate zu differenzieren 
     for (let i = 1; i < data.length; i++) {
@@ -314,14 +313,20 @@ let CountyCountsPerMonth = function () {
 
             // console.log(collectMonth);
             let countMonth = CountyCount(collectMonth); //Zählen der Todesfälle pro County pro Monat
-            collectAllCountsPerMonth.push([YearMonth, countMonth])
+
+            collectAccCountsOfMonths = collectAccCountsOfMonths.map(function (num, idx) {
+                return num + countMonth[idx];
+            });
+
+            collectAllCountsPerMonth.push([YearMonth, countMonth, collectAccCountsOfMonths]);
 
             // console.log(year1, month1, countMonth, "Einträge: ", collectMonth.length);
             collectMonth = []; //Array leeren für nächsten Monat
         };
     };
     // console.log("total check", collectTotal);
-    console.log(collectAllCountsPerMonth);
+    return collectAllCountsPerMonth;
 };
 
-CountyCountsPerMonth();
+let AllCountsPerMonth = CountyCountsPerMonth(DATA.data);
+console.log(AllCountsPerMonth);
