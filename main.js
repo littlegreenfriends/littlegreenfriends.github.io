@@ -234,6 +234,8 @@ let CountyCount = function (data) {
 let CountArray = CountyCount(DATA.data);
 
 let drawCountyCount = function (ArrayWithCountyCounts) {
+    overlay.accidents_county.clearLayers();
+
     for (let i in county_center) {
         let county = county_center[i]
         let countSingleCounty = ArrayWithCountyCounts[i]
@@ -329,4 +331,16 @@ let CountyCountsPerMonth = function (data) {
 };
 
 let AllCountsPerMonth = CountyCountsPerMonth(DATA.data);
-console.log(AllCountsPerMonth);
+// console.log(AllCountsPerMonth, AllCountsPerMonth.length);
+
+let slider = document.querySelector("#slider");
+slider.min = 0;
+slider.max = AllCountsPerMonth.length;
+slider.step = 1;
+
+slider.onchange = function () {
+    overlay.accidents_county.addTo(map);
+    let index = slider.value;
+    let dataMonth = AllCountsPerMonth[index][2];
+    drawCountyCount(dataMonth);
+}
