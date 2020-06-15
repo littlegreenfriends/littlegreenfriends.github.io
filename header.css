@@ -1,0 +1,46 @@
+div.winmax, div.winmin {
+    display: inline-block;
+    font-weight: bold;
+    vertical-align: top;
+    padding: 0.75em;
+}
+
+@media screen and (max-width: 1529px){
+    div.winmax {
+        display:none;
+    }
+}
+
+@media screen and (min-width: 1530px){
+    div.winmin {
+        display:none;
+    }
+}
+
+.minmap:hover + .hide1 {
+    display: inline-block;
+}
+.hide1 {
+    display: none;
+}
+
+.mininfo:hover + .hide2 {
+    display: inline-block;
+}
+.hide2 {
+    display: none;
+}
+
+.mindrug:hover + .hide3 {
+    display: inline-block;
+}
+.hide3 {
+    display: none;
+}
+
+.minhelp:hover + .hide4 {
+    display: inline-block;
+}
+.hide4 {
+    display: none;
+}
