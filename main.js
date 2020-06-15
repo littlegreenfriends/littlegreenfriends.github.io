@@ -1,5 +1,5 @@
 //Map Setup
-let startLayer = L.tileLayer.provider("Esri.WorldStreetMap");
+let startLayer = L.tileLayer.provider("CartoDB.VoyagerLabelsUnder");
 
 let HoverStyleGreen = {
     fillColor: "green",
@@ -10,8 +10,6 @@ let HoverStyleGreen = {
 
 let overlay = {
     drugaccidents: L.markerClusterGroup({
-        // spiderfyOnMaxZoom: true,
-        // disableClusteringAtZoom: 13,
         polygonOptions: HoverStyleGreen
     }),
     drugaccidents_female: L.markerClusterGroup({
@@ -19,7 +17,8 @@ let overlay = {
     }),
     drugaccidents_male: L.markerClusterGroup({
         polygonOptions: HoverStyleGreen
-    })
+    }),
+    accidents_county: L.featureGroup()
 };
 
 let map = L.map("map", {
@@ -38,9 +37,11 @@ let zoomHome = L.Control.zoomHome();
 zoomHome.addTo(map);
 
 let baseMaps = {
+    "CartoDB.VoyagerLabelsUnder": startLayer,
+    "CartoDB.Positron": L.tileLayer.provider("CartoDB.Positron"),
     "Esri.WorldStreetMap": L.tileLayer.provider("Esri.WorldStreetMap"),
-    "Esri.WorldPhysical": L.tileLayer.provider("Esri.WorldPhysical"),
-    "OpenTopoMap": L.tileLayer.provider("OpenTopoMap")
+    "Esri.WorldTopoMap": L.tileLayer.provider("Esri.WorldTopoMap"),
+    "Esri.WorldImagery": L.tileLayer.provider("Esri.WorldImagery")
 };
 
 let groupedOverlays = {
@@ -48,6 +49,9 @@ let groupedOverlays = {
         "Total": overlay.drugaccidents,
         "Female": overlay.drugaccidents_female,
         "Male": overlay.drugaccidents_male
+    },
+    "Cases by County": {
+        "Fatal Drug Abuse Incidents": overlay.accidents_county
     }
 };
 
@@ -78,8 +82,8 @@ let drawAccidents = function (datapoints, layer) {
         }).addTo(layer);
 
         //Aufbereiten von Informationen für Popup
-        // let date = element[9].slice(0,10); //nicht alle Punkte werden angezeigt
-        // console.log(date)
+        let date = new Date (element[9]);
+        let YearMonthDay = date.toISOString().substring(0, 10); 
 
         //Sterbeort
         let location;
@@ -115,7 +119,7 @@ let drawAccidents = function (datapoints, layer) {
 
         //Popup Text
         let popupText = `<h3>Details on Fatal Drug Abuse Incident</h3>` +
-            `<b>Date:</b> ${element[9]}</br>` +
+            `<b>Date:</b> ${YearMonthDay}</br>` +
             `<b>Personal Details:</b> ${element[12]}, ${element[11]}</br>` +
             `<b>Location of Death:</b> ${location || "-"} (${element[17] || "-"}, ${element[18] || "-"})</br>` +
             // `</br><b>Location of Death:</b> ${location || "-"}` +
@@ -235,16 +239,16 @@ let drawCountyCount = function (ArrayWithCountyCounts) {
         let countSingleCounty = ArrayWithCountyCounts[i]
 
         // console.log(countCounty, county);
-    
+
         let s = 4;
         let r = Math.sqrt(countSingleCounty * s / Math.PI);
         let circle = L.circleMarker([county[1], county[2]], {
             radius: r,
             color: "#85144b"
-        }).addTo(map);
-    
-        circle.bindPopup(`${county[0]}: ${countSingleCounty}`);
-    
+        }).addTo(overlay.accidents_county);
+
+        circle.bindPopup(`Fatal Incidents in ${county[0]}: ${countSingleCounty}`);
+
     };
 };
 
@@ -261,7 +265,7 @@ let CountyCountsPerMonth = function () {
 
         date1 = row1[9];
         date2 = row2[9];
-        if (date1 < date2) { 
+        if (date1 < date2) {
             return -1;
         } else if (date1 > date2) {
             return 1;
@@ -278,16 +282,16 @@ let CountyCountsPerMonth = function () {
 
     //Zeilenweiser Vergleich von Einträgen, um Monate zu differenzieren 
     for (let i = 1; i < data.length; i++) {
-        let element1 = data[i-1]; //Eintrag 1 wird mit Eintrag 2 verglichen
+        let element1 = data[i - 1]; //Eintrag 1 wird mit Eintrag 2 verglichen
         let element2 = data[i];
 
         //Datum im Datensatz ist in ISO Format gespeichert --> Abruf mit "new Date"
-        let date1 = new Date(element1[9]); 
+        let date1 = new Date(element1[9]);
         let date2 = new Date(element2[9]);
 
         let year1 = date1.getFullYear(); //Jahr
         let month1 = date1.getMonth() + 1; //Monat (Hintergrund von +1: Month Index ist 0-baisert (Januar = 0))
-        let YearMonth = date1.toISOString().substring(0,7); //Information Monat 
+        let YearMonth = date1.toISOString().substring(0, 7); //Information Monat 
 
         let year2 = date2.getFullYear(); //Jahr
         let month2 = date2.getMonth() + 1; //Monat (Hintergrund von +1: Month Index ist 0-baisert (Januar = 0))
