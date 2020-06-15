@@ -82,8 +82,8 @@ let drawAccidents = function (datapoints, layer) {
         }).addTo(layer);
 
         //Aufbereiten von Informationen für Popup
-        // let date = element[9].slice(0,10); //nicht alle Punkte werden angezeigt
-        // console.log(date)
+        let date = new Date (element[9]);
+        let YearMonthDay = date.toISOString().substring(0, 10); 
 
         //Sterbeort
         let location;
@@ -119,7 +119,7 @@ let drawAccidents = function (datapoints, layer) {
 
         //Popup Text
         let popupText = `<h3>Details on Fatal Drug Abuse Incident</h3>` +
-            `<b>Date:</b> ${element[9]}</br>` +
+            `<b>Date:</b> ${YearMonthDay}</br>` +
             `<b>Personal Details:</b> ${element[12]}, ${element[11]}</br>` +
             `<b>Location of Death:</b> ${location || "-"} (${element[17] || "-"}, ${element[18] || "-"})</br>` +
             // `</br><b>Location of Death:</b> ${location || "-"}` +
@@ -247,7 +247,7 @@ let drawCountyCount = function (ArrayWithCountyCounts) {
             color: "#85144b"
         }).addTo(overlay.accidents_county);
 
-        circle.bindPopup(`${county[0]}: ${countSingleCounty}`);
+        circle.bindPopup(`Fatal Incidents in ${county[0]}: ${countSingleCounty}`);
 
     };
 };
