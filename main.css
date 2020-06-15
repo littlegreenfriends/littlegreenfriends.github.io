@@ -48,3 +48,8 @@ header nav a {
 #slider {
     width: 85%;
 }
+
+main figure img  {
+    max-width: 100%;
+    height: auto;
+}
