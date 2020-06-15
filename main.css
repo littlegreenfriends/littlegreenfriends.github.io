@@ -54,8 +54,10 @@ main figure img  {
     height: auto;
 }
 
-main h1 figure img {
-        border-radius: 50%;
+.drugs-classes {
+    width: 494px;
+    height: auto;
+    float: right;
 }
 
 div.winmax, div.winmin {
