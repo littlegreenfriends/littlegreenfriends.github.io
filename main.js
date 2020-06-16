@@ -258,7 +258,18 @@ drawCountyCount(CountArray);
 
 
 //Funktion zum Zählen der Fälle pro County pro Monat
-let CountyCountsPerMonth = function (data) {
+let CountyCountsPerMonth = function (data_raw) {
+    let data = [];
+    //Nur Dateneinträge mit Datum (nicht null) verwenden
+    for (let i in data_raw) {
+        if (!data_raw.hasOwnProperty(i)) continue;
+        let element = data_raw[i];
+
+        if (element[9] != null) {
+            data.push(element)
+        }
+    }
+
     //Sortieren des Datensatzes nach Todesdatum
     data.sort(function (row1, row2) {
         let date1, date2;
@@ -289,6 +300,7 @@ let CountyCountsPerMonth = function (data) {
         //Datum im Datensatz ist in ISO Format gespeichert --> Abruf mit "new Date"
         let date1 = new Date(element1[9]);
         let date2 = new Date(element2[9]);
+        //console.log(element1[9]);
 
         let year1 = date1.getFullYear(); //Jahr
         let month1 = date1.getMonth() + 1; //Monat (Hintergrund von +1: Month Index ist 0-baisert (Januar = 0))
@@ -322,7 +334,7 @@ let CountyCountsPerMonth = function (data) {
 
             collectAllCountsPerMonth.push([YearMonth, countMonth, collectAccCountsOfMonths]);
 
-            // console.log(year1, month1, countMonth, "Einträge: ", collectMonth.length);
+            //console.log(year1, month1, countMonth, "Einträge: ", collectMonth.length);
             collectMonth = []; //Array leeren für nächsten Monat
         };
     };
@@ -380,7 +392,7 @@ playButton.onclick = function () {
 
             let month = AllCountsPerMonth[slider.value][0];
             dateOutput.innerHTML = month;
-            
+
             value++;
 
             if (value > slider.max) { //bei einem Wert größer als max
