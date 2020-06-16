@@ -19,8 +19,10 @@ let overlay = {
     drugaccidents_male: L.markerClusterGroup({
         polygonOptions: HoverStyleGreen
     }),
+    no_selection: L.featureGroup(), //Leere FeatureGroup für Ausblenden von ExclusiveOverlays
+    
     accidents_county: L.featureGroup(),
-    no_selection: L.featureGroup() //Leere FeatureGroup für Ausblenden von ExclusiveOverlays
+    accidents_county_month: L.featureGroup(),
 };
 
 let map = L.map("map", {
@@ -54,8 +56,9 @@ let groupedOverlays = {
         "Male": overlay.drugaccidents_male,
         "No Selection": overlay.no_selection
     },
-    "Cases by County": {
-        "Fatal Drug Abuse Incidents": overlay.accidents_county
+    "Number of Cases by County": {
+        "Total (2012-2018)": overlay.accidents_county,
+        "By Month": overlay.accidents_county_month
     }
 };
 
@@ -137,6 +140,7 @@ let drawAccidents = function (datapoints, layer) {
         mrk.bindPopup(popupText);
 
     }
+
 
     map.fitBounds(layer.getBounds())
 };
@@ -232,24 +236,29 @@ let CountyCount = function (data) {
 
 let CountArray = CountyCount(DATA.data);
 
-let drawCountyCount = function (ArrayWithCountyCounts) {
+let drawCountyCount = function (ArrayWithCountyCounts, layer, sizefactor) {
+    layer.clearLayers();
+
     for (let i in county_center) {
         let county = county_center[i]
         let countSingleCounty = ArrayWithCountyCounts[i]
 
-        let s = 6;
-        let r = Math.sqrt(countSingleCounty * s / Math.PI);
+        if (countSingleCounty == 0) { //Bei Wert 0 keinen Kreis zeichnen
+            continue;
+        }
+
+        let r = Math.sqrt(countSingleCounty * sizefactor / Math.PI);
         let circle = L.circleMarker([county[1], county[2]], {
             radius: r,
             color: "#85144b"
-        }).addTo(overlay.accidents_county);
+        }).addTo(layer);
 
         circle.bindPopup(`Fatal Incidents in ${county[0]}: ${countSingleCounty} (Total)`);
 
     };
 };
 
-drawCountyCount(CountArray);
+drawCountyCount(CountArray, overlay.accidents_county, 6);
 
 
 //Funktion zum Zählen der Fälle pro County pro Monat
@@ -284,7 +293,6 @@ let CountyCountsPerMonth = function (data_raw) {
     let collectMonth = []; //Sammelt alle Dateneinträge eines Monats
     let collectTotal = []; //Kontroll Array
     let collectAllCountsPerMonth = []; //Sammelt alle CountyCounts pro Monat + Akkumulierte CountyCounts
-    let collectAccCountsOfMonths = [0, 0, 0, 0, 0, 0, 0, 0]; //Akkumuliert monatliche CountyCounts 
 
     //Zeilenweiser Vergleich von Einträgen, um Monate zu differenzieren 
     for (let i = 1; i < data.length; i++) {
@@ -319,14 +327,7 @@ let CountyCountsPerMonth = function (data_raw) {
             collectTotal.push(element1); //letzter Eintrag des Monats (Kontroll Array)
 
             let countMonth = CountyCount(collectMonth); //Zählen der Todesfälle pro County pro Monat
-
-            collectAccCountsOfMonths = collectAccCountsOfMonths.map(function (num, index) {
-                return num + countMonth[index];
-            });
-
-            collectAllCountsPerMonth.push([YearMonth, countMonth, collectAccCountsOfMonths]);
-
-            //console.log(year1, month1, countMonth, "Einträge: ", collectMonth.length);
+            collectAllCountsPerMonth.push([YearMonth, countMonth]);
             collectMonth = []; //Array leeren für nächsten Monat
         };
     };
@@ -346,10 +347,10 @@ slider.value = 0; //Slider auf Start positionieren
 let dateOutput = document.querySelector("#dateOutput")
 
 slider.onchange = function () {
-    overlay.accidents_county.addTo(map);
+    overlay.accidents_county_month.addTo(map);
     let index = slider.value;
-    let dataMonth = AllCountsPerMonth[index][2]
-    drawCountyCount(dataMonth);
+    let dataMonth = AllCountsPerMonth[index][1]
+    drawCountyCount(dataMonth, overlay.accidents_county_month, 200);
 
     let month = AllCountsPerMonth[index][0];
     dateOutput.innerHTML = month;
@@ -373,9 +374,9 @@ playButton.onclick = function () {
     if (runningAnimation) {
         window.clearInterval(runningAnimation);
 
-        overlay.accidents_county.clearLayers();
-        drawCountyCount(AllCountsPerMonth[slider.value][2]); //Kreise zeichnen, wenn pausiert
-        overlay.accidents_county.addTo(map);
+        overlay.accidents_county_month.clearLayers();
+        drawCountyCount(AllCountsPerMonth[slider.value][1], overlay.accidents_county_month, 200); //Kreise zeichnen, wenn pausiert
+        overlay.accidents_county_month.addTo(map);
 
         playButton.value = "▶";
         runningAnimation = null;
@@ -384,9 +385,9 @@ playButton.onclick = function () {
         runningAnimation = window.setInterval(function () { //Funktion wird als Variable definiert
             slider.value = value; //Wert wird der Sliderposition übergeben
 
-            overlay.accidents_county.clearLayers();
-            drawCountyCount(AllCountsPerMonth[slider.value][2]);
-            overlay.accidents_county.addTo(map);
+            overlay.accidents_county_month.clearLayers();
+            drawCountyCount(AllCountsPerMonth[slider.value][1], overlay.accidents_county_month, 200);
+            overlay.accidents_county_month.addTo(map);
 
             let month = AllCountsPerMonth[slider.value][0];
             dateOutput.innerHTML = month;
@@ -398,7 +399,7 @@ playButton.onclick = function () {
                 playButton.value = "▶";
                 runningAnimation = null;
             }
-        }, 70)
+        }, 150)
     }
 }
 
