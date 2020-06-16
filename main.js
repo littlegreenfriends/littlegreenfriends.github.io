@@ -18,7 +18,8 @@ let overlay = {
     drugaccidents_male: L.markerClusterGroup({
         polygonOptions: HoverStyleGreen
     }),
-    accidents_county: L.featureGroup()
+    accidents_county: L.featureGroup(),
+    no_selection: L.featureGroup() //Leere FeatureGroup für Ausblenden von ExclusiveOverlays
 };
 
 let map = L.map("map", {
@@ -48,7 +49,8 @@ let groupedOverlays = {
     "Fatal Drug Abuse Incidents": {
         "Total": overlay.drugaccidents,
         "Female": overlay.drugaccidents_female,
-        "Male": overlay.drugaccidents_male
+        "Male": overlay.drugaccidents_male,
+        "No Selection": overlay.no_selection
     },
     "Cases by County": {
         "Fatal Drug Abuse Incidents": overlay.accidents_county
@@ -57,7 +59,7 @@ let groupedOverlays = {
 
 let options = {
     exclusiveGroups: ["Fatal Drug Abuse Incidents"],
-    groupCheckboxes: true
+    groupCheckboxes: false
 }
 
 L.control.groupedLayers(baseMaps, groupedOverlays, options).addTo(map);
