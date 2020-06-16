@@ -1,6 +1,7 @@
 //Map Setup
 let startLayer = L.tileLayer.provider("CartoDB.VoyagerLabelsUnder");
 
+//Stylen der Polygone bei Hovern über ClusterGroup
 let HoverStyleGreen = {
     fillColor: "green",
     color: "#3d9970",
@@ -24,7 +25,7 @@ let overlay = {
 
 let map = L.map("map", {
     zoomControl: false,
-    center: [41.641090, -72.721383], 
+    center: [41.641090, -72.721383],
     zoom: 8,
     layers: [
         startLayer,
@@ -33,8 +34,11 @@ let map = L.map("map", {
 });
 
 //Fullscreen Plugin
-map.addControl(new L.Control.Fullscreen({position: 'bottomleft'}));
+map.addControl(new L.Control.Fullscreen({
+    position: 'bottomleft'
+}));
 
+//Variablen für Grouped Layer Controll
 let baseMaps = {
     "CartoDB.VoyagerLabelsUnder": startLayer,
     "CartoDB.Positron": L.tileLayer.provider("CartoDB.Positron"),
@@ -56,13 +60,13 @@ let groupedOverlays = {
 };
 
 let options = {
-    exclusiveGroups: ["Fatal Drug Abuse Incidents"],
+    exclusiveGroups: ["Fatal Drug Abuse Incidents"], //nur ein layer kann angezeigt werden
     groupCheckboxes: false
 }
 
 L.control.groupedLayers(baseMaps, groupedOverlays, options).addTo(map);
 
-
+//Funktion zum Zeichnen von Markern mit Informations - Popup für einzelne Todesfälle
 let drawAccidents = function (datapoints, layer) {
 
     for (let index in datapoints) {
@@ -82,7 +86,8 @@ let drawAccidents = function (datapoints, layer) {
         }).addTo(layer);
 
         //Aufbereiten von Informationen für Popup
-        let date = new Date(element[9]);
+        //Datum 
+        let date = new Date(element[9]); //ISO Datums Format "abrufen"
         let YearMonthDay = date.toISOString().substring(0, 10);
 
         //Sterbeort
@@ -131,14 +136,13 @@ let drawAccidents = function (datapoints, layer) {
 
         mrk.bindPopup(popupText);
 
-
     }
 
     map.fitBounds(layer.getBounds())
 };
 
 
-//Alle Fälle
+//Zeichnen von allen Fällen
 let drawAccidentsTotal = function () {
     drawAccidents(DATA.data, overlay.drugaccidents);
 }
@@ -185,14 +189,10 @@ let CountyCount = function (data) {
     for (let index in data) {
         if (!data.hasOwnProperty(index)) continue;
         let element = data[index];
-
         if (!element.hasOwnProperty(18)) continue; //DeathCounty
 
-        let DeathCounty = element[18]
-        let date = element[9]
-        // console.log(date);
-
         //Daten nach Counties kategorisieren und zählen
+        let DeathCounty = element[18]
         switch (DeathCounty) {
             case "HARTFORD":
                 hartford++;
@@ -227,20 +227,15 @@ let CountyCount = function (data) {
     //Sammeln der Counts pro County
     //Reihenfolge in Countarray wie Counties in Variable "county_center"
     countarray = [hartford, newhaven, fairfield, newlondon, litchfield, middlesex, windham, tolland];
-    // console.log(countarray);
     return countarray;
 };
 
 let CountArray = CountyCount(DATA.data);
 
 let drawCountyCount = function (ArrayWithCountyCounts) {
-    overlay.accidents_county.clearLayers();
-
     for (let i in county_center) {
         let county = county_center[i]
         let countSingleCounty = ArrayWithCountyCounts[i]
-
-        // console.log(countCounty, county);
 
         let s = 6;
         let r = Math.sqrt(countSingleCounty * s / Math.PI);
@@ -260,9 +255,10 @@ drawCountyCount(CountArray);
 //Funktion zum Zählen der Fälle pro County pro Monat
 let CountyCountsPerMonth = function (data_raw) {
     let data = [];
-    //Nur Dateneinträge mit Datum (nicht null) verwenden
+
+    //Dateneinträge ohne Datum (null) stören die Sortierung
     for (let i in data_raw) {
-        if (!data_raw.hasOwnProperty(i)) continue;
+        if (!data_raw.hasOwnProperty(i)) continue;  
         let element = data_raw[i];
 
         if (element[9] != null) {
@@ -283,8 +279,6 @@ let CountyCountsPerMonth = function (data_raw) {
         }
         return 0;
     });
-
-    //console.log("Nach Datum sortiert:", data);
 
     //Einzelne Monate abfragen
     let collectMonth = []; //Sammelt alle Dateneinträge eines Monats
@@ -318,18 +312,16 @@ let CountyCountsPerMonth = function (data_raw) {
         if (monthID1 == monthID2) { //solange gleiche "MonatID" (ergo gleicher Monat)
             collectMonth.push(element1);
             collectTotal.push(element1); //Kontroll Array
-            // console.log(collectMonth);
             continue; //Nächstes "Datenpaar" abfragen
 
         } else { // = Monatsgrenze (element1 in anderem Monat als element2)
             collectMonth.push(element1); //letzter Eintrag des Monats
             collectTotal.push(element1); //letzter Eintrag des Monats (Kontroll Array)
 
-            // console.log(collectMonth);
             let countMonth = CountyCount(collectMonth); //Zählen der Todesfälle pro County pro Monat
 
-            collectAccCountsOfMonths = collectAccCountsOfMonths.map(function (num, idx) {
-                return num + countMonth[idx];
+            collectAccCountsOfMonths = collectAccCountsOfMonths.map(function (num, index) {
+                return num + countMonth[index];
             });
 
             collectAllCountsPerMonth.push([YearMonth, countMonth, collectAccCountsOfMonths]);
@@ -347,7 +339,7 @@ let AllCountsPerMonth = CountyCountsPerMonth(DATA.data);
 
 let slider = document.querySelector("#slider");
 slider.min = 0;
-slider.max = AllCountsPerMonth.length-1;
+slider.max = AllCountsPerMonth.length - 1;
 slider.step = 1;
 slider.value = 0; //Slider auf Start positionieren
 
@@ -364,13 +356,13 @@ slider.onchange = function () {
     console.log(month);
 };
 
-//Animation
+//Animation: Visualisierung der Anzahl der Fälle pro County für jeden Monat
 let playButton = document.querySelector("#play");
-let runningAnimation = null; 
+let runningAnimation = null;
 
 playButton.onclick = function () {
     let value = slider.min; //Startet bei Minimum (0)
-    if (slider.value == slider.max) {//Fall Slider am Ende, wieder von vorne starten
+    if (slider.value == slider.max) { //Fall Slider am Ende, wieder von vorne starten
         value = slider.min;
     } else {
         value = slider.value;
