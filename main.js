@@ -244,7 +244,7 @@ let drawCountyCount = function (ArrayWithCountyCounts) {
 
         // console.log(countCounty, county);
 
-        let s = 6;
+        let s = 8;
         let r = Math.sqrt(countSingleCounty * s / Math.PI);
         let circle = L.circleMarker([county[1], county[2]], {
             radius: r,
@@ -408,6 +408,6 @@ playButton.onclick = function () {
                 playButton.value = "▶";
                 runningAnimation = null;
             }
-        }, 50)
+        }, 70)
     }
 }
