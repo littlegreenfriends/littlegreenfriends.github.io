@@ -33,9 +33,7 @@ let map = L.map("map", {
     ]
 });
 
-//ZoomHome-Funktion
-let zoomHome = L.Control.zoomHome();
-zoomHome.addTo(map);
+
 
 let baseMaps = {
     "CartoDB.VoyagerLabelsUnder": startLayer,
@@ -411,3 +409,7 @@ playButton.onclick = function () {
         }, 70)
     }
 }
+
+//ZoomHome-Funktion
+let zoomHome = L.Control.zoomHome();
+zoomHome.addTo(map);
