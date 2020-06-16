@@ -18,7 +18,8 @@ let overlay = {
     drugaccidents_male: L.markerClusterGroup({
         polygonOptions: HoverStyleGreen
     }),
-    accidents_county: L.featureGroup()
+    accidents_county: L.featureGroup(),
+    no_selection: L.featureGroup() //Leere FeatureGroup für Ausblenden von ExclusiveOverlays
 };
 
 let map = L.map("map", {
@@ -32,9 +33,7 @@ let map = L.map("map", {
     ]
 });
 
-//ZoomHome-Funktion
-let zoomHome = L.Control.zoomHome();
-zoomHome.addTo(map);
+
 
 let baseMaps = {
     "CartoDB.VoyagerLabelsUnder": startLayer,
@@ -48,7 +47,8 @@ let groupedOverlays = {
     "Fatal Drug Abuse Incidents": {
         "Total": overlay.drugaccidents,
         "Female": overlay.drugaccidents_female,
-        "Male": overlay.drugaccidents_male
+        "Male": overlay.drugaccidents_male,
+        "No Selection": overlay.no_selection
     },
     "Cases by County": {
         "Fatal Drug Abuse Incidents": overlay.accidents_county
@@ -57,7 +57,7 @@ let groupedOverlays = {
 
 let options = {
     exclusiveGroups: ["Fatal Drug Abuse Incidents"],
-    groupCheckboxes: true
+    groupCheckboxes: false
 }
 
 L.control.groupedLayers(baseMaps, groupedOverlays, options).addTo(map);
@@ -242,7 +242,7 @@ let drawCountyCount = function (ArrayWithCountyCounts) {
 
         // console.log(countCounty, county);
 
-        let s = 6;
+        let s = 8;
         let r = Math.sqrt(countSingleCounty * s / Math.PI);
         let circle = L.circleMarker([county[1], county[2]], {
             radius: r,
@@ -406,6 +406,10 @@ playButton.onclick = function () {
                 playButton.value = "▶";
                 runningAnimation = null;
             }
-        }, 50)
+        }, 70)
     }
 }
+
+//ZoomHome-Funktion
+let zoomHome = L.Control.zoomHome();
+zoomHome.addTo(map);
