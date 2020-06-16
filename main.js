@@ -23,17 +23,17 @@ let overlay = {
 };
 
 let map = L.map("map", {
-    fullscreenControl: true,
     zoomControl: false,
-    center: [41.7625, -72.674167], //Hartford
-    zoom: 9,
+    center: [41.641090, -72.721383], 
+    zoom: 8,
     layers: [
         startLayer,
         overlay.drugaccidents
     ]
 });
 
-
+//Fullscreen Plugin
+map.addControl(new L.Control.Fullscreen({position: 'bottomleft'}));
 
 let baseMaps = {
     "CartoDB.VoyagerLabelsUnder": startLayer,
@@ -242,14 +242,14 @@ let drawCountyCount = function (ArrayWithCountyCounts) {
 
         // console.log(countCounty, county);
 
-        let s = 8;
+        let s = 6;
         let r = Math.sqrt(countSingleCounty * s / Math.PI);
         let circle = L.circleMarker([county[1], county[2]], {
             radius: r,
             color: "#85144b"
         }).addTo(overlay.accidents_county);
 
-        circle.bindPopup(`Fatal Incidents in ${county[0]}: ${countSingleCounty}`);
+        circle.bindPopup(`Fatal Incidents in ${county[0]}: ${countSingleCounty} (Total)`);
 
     };
 };
@@ -369,8 +369,6 @@ let playButton = document.querySelector("#play");
 let runningAnimation = null; 
 
 playButton.onclick = function () {
-    overlay.accidents_county.addTo(map);
-
     let value = slider.min; //Startet bei Minimum (0)
     if (slider.value == slider.max) {//Fall Slider am Ende, wieder von vorne starten
         value = slider.min;
@@ -385,6 +383,7 @@ playButton.onclick = function () {
 
         overlay.accidents_county.clearLayers();
         drawCountyCount(AllCountsPerMonth[slider.value][2]); //Kreise zeichnen, wenn pausiert
+        overlay.accidents_county.addTo(map);
 
         playButton.value = "▶";
         runningAnimation = null;
@@ -395,6 +394,7 @@ playButton.onclick = function () {
 
             overlay.accidents_county.clearLayers();
             drawCountyCount(AllCountsPerMonth[slider.value][2]);
+            overlay.accidents_county.addTo(map);
 
             let month = AllCountsPerMonth[slider.value][0];
             dateOutput.innerHTML = month;
