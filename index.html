@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-providers/1.9.1/leaflet-providers.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
 
@@ -91,8 +89,11 @@
                 DATA.GOV</a> von 2012 bis 2018</p>
 
         <div id="map"></div>
-        <input type="range" id="slider">
-        <input id="play" type="button" value="▶">
+        <div id="sliderDiv">
+            <input type="range" id="slider">
+            <input id="play" type="button" value="▶">
+            <div id="dateOutput"></div>
+        </div> 
 
         <p>
             Die in der Karte veranschaulichten Daten stammen aus einer Liste der Regierung des Bundesstaates Connecticut

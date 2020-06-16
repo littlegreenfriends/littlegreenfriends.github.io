@@ -338,11 +338,17 @@ slider.min = 0;
 slider.max = AllCountsPerMonth.length-1;
 slider.step = 1;
 
+let dateOutput = document.querySelector("#dateOutput")
+
 slider.onchange = function () {
     overlay.accidents_county.addTo(map);
     let index = slider.value;
-    let dataMonth = AllCountsPerMonth[index][2];
+    let dataMonth = AllCountsPerMonth[index][2]
     drawCountyCount(dataMonth);
+
+    let month = AllCountsPerMonth[index][0];
+    dateOutput.innerHTML = month;
+    console.log(month);
 };
 
 //Animation
@@ -371,6 +377,10 @@ playButton.onclick = function () {
         runningAnimation = window.setInterval(function () { //Funktion wird als Variable definiert
             slider.value = value; //Wert wird der Sliderposition übergeben
             drawCountyCount(AllCountsPerMonth[slider.value][2]);
+
+            let month = AllCountsPerMonth[slider.value][0];
+            dateOutput.innerHTML = month;
+            
             value++;
 
             if (value > slider.max) { //bei einem Wert größer als max
