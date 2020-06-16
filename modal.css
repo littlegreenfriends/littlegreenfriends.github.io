@@ -1,13 +1,13 @@
 /* ++++++++++++++++++++++++++++Modal++++++++++++++++++++++++++++++++++++++++ */
 body {font-family: Arial, Helvetica, sans-serif;}
 
-#myImg {
+.zoomImg {
   border-radius: 5px;
   cursor: pointer;
   transition: 0.3s;
 }
 
-#myImg:hover {opacity: 0.7;}
+.zoomImg:hover {opacity: 0.7;}
 
 /* The Modal (background) */
 .modal {
@@ -28,8 +28,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
 .modal-content {
   margin: auto;
   display: block;
-  width: 100%;
-  max-width: 800px;
+  width: 80%;
+  max-width: 1000px;
 }
 
 /* Caption of Modal Image */
