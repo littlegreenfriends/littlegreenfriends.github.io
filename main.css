@@ -53,6 +53,19 @@ main figure img  {
     height: auto;
 }
 
+.box1, .box2, .box3 {
+    float: left;
+    width: 32%;
+    margin-right: 2%;
+    padding: 5px;
+    background: white;
+    box-sizing: border-box;
+}
+.box3 {
+    margin-right: 0;
+}
+
+
 #drugs-classes {
     width: 250px;
     height: auto;
