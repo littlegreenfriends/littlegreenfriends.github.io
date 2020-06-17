@@ -368,7 +368,7 @@ playButton.onclick = function () {
         window.clearInterval(runningAnimation);
 
         overlay.accidents_county_month.clearLayers();
-        drawCountyCount(AllCountsPerMonth[slider.value][1], overlay.accidents_county_month, 200, AllCountsPerMonth[index][0]); //Kreise zeichnen, wenn pausiert
+        drawCountyCount(AllCountsPerMonth[slider.value][1], overlay.accidents_county_month, 200, AllCountsPerMonth[slider.value][0]); //Kreise zeichnen, wenn pausiert
         overlay.accidents_county_month.addTo(map);
 
         playButton.value = "▶";
@@ -379,7 +379,7 @@ playButton.onclick = function () {
             slider.value = value; //Wert wird der Sliderposition übergeben
 
             // overlay.accidents_county_month.clearLayers();
-            drawCountyCount(AllCountsPerMonth[slider.value][1], overlay.accidents_county_month, 200, AllCountsPerMonth[index][0]);
+            drawCountyCount(AllCountsPerMonth[slider.value][1], overlay.accidents_county_month, 200, AllCountsPerMonth[slider.value][0]);
             overlay.accidents_county_month.addTo(map);
 
             let month = AllCountsPerMonth[slider.value][0];
