@@ -328,6 +328,9 @@ let CountyCountsPerMonth = function (data_raw) {
 
 let AllCountsPerMonth = CountyCountsPerMonth(DATA.data);
 
+//erster Monat zu Overlay hinzufügen 
+drawCountyCount(AllCountsPerMonth[0][1], overlay.accidents_county_month, 200, "#39CCCC", AllCountsPerMonth[0][0]);
+
 let slider = document.querySelector("#slider");
 slider.min = 0;
 slider.max = AllCountsPerMonth.length - 1;
