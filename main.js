@@ -31,7 +31,8 @@ let map = L.map("map", {
     zoom: 8,
     layers: [
         startLayer,
-        overlay.drugaccidents
+        overlay.drugaccidents,
+        overlay.accidents_county
     ]
 });
 
@@ -232,7 +233,7 @@ let CountyCount = function (data) {
 let CountArray = CountyCount(DATA.data);
 
 let drawCountyCount = function (ArrayWithCountyCounts, layer, sizefactor, col, popuptext) {
-    overlay.accidents_county_month.clearLayers();
+    layer.clearLayers();
 
     for (let i in county_center) {
         let county = county_center[i]
@@ -340,7 +341,7 @@ slider.value = 0; //Slider auf Start positionieren
 let dateOutput = document.querySelector("#dateOutput")
 
 slider.onchange = function () {
-    overlay.accidents_county.clearLayers();
+    map.removeLayer(overlay.accidents_county);
 
     overlay.accidents_county_month.addTo(map);
     let index = slider.value;
@@ -356,7 +357,7 @@ let playButton = document.querySelector("#play");
 let runningAnimation = null;
 
 playButton.onclick = function () {
-    overlay.accidents_county.clearLayers();
+    map.removeLayer(overlay.accidents_county);
 
     let value = slider.min; //Startet bei Minimum (0)
     if (slider.value == slider.max) { //Fall Slider am Ende, wieder von vorne starten
@@ -398,6 +399,13 @@ playButton.onclick = function () {
         }, 150)
     }
 }
+
+//Anordnung der Kreise regulieren: overlay.accidents_county_month immer über overlay.accidents_county
+map.on('overlayadd', function () {
+    if (map.hasLayer(overlay.accidents_county_month) == true) {
+        overlay.accidents_county_month.bringToFront();
+    }
+})
 
 //ZoomHome-Funktion
 let zoomHome = L.Control.zoomHome();
