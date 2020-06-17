@@ -20,7 +20,7 @@ let overlay = {
         polygonOptions: HoverStyleGreen
     }),
     no_selection: L.featureGroup(), //Leere FeatureGroup für Ausblenden von ExclusiveOverlays
-    
+
     accidents_county: L.featureGroup(),
     accidents_county_month: L.featureGroup(),
 };
@@ -262,7 +262,7 @@ let CountyCountsPerMonth = function (data_raw) {
 
     //Dateneinträge ohne Datum (null) stören die Sortierung
     for (let i in data_raw) {
-        if (!data_raw.hasOwnProperty(i)) continue;  
+        if (!data_raw.hasOwnProperty(i)) continue;
         let element = data_raw[i];
 
         if (element[9] != null) {
@@ -378,7 +378,7 @@ playButton.onclick = function () {
         runningAnimation = window.setInterval(function () { //Funktion wird als Variable definiert
             slider.value = value; //Wert wird der Sliderposition übergeben
 
-            // overlay.accidents_county_month.clearLayers();
+            overlay.accidents_county_month.clearLayers();
             drawCountyCount(AllCountsPerMonth[slider.value][1], overlay.accidents_county_month, 200, "#39CCCC", AllCountsPerMonth[slider.value][0]);
             overlay.accidents_county_month.addTo(map);
 
