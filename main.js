@@ -353,8 +353,6 @@ let playButton = document.querySelector("#play");
 let runningAnimation = null;
 
 playButton.onclick = function () {
-    overlay.accidents_county.clearLayers();
-
     let value = slider.min; //Startet bei Minimum (0)
     if (slider.value == slider.max) { //Fall Slider am Ende, wieder von vorne starten
         value = slider.min;
